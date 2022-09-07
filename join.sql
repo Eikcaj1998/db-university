@@ -35,12 +35,12 @@
     ORDER BY `students`.`surname`,`students`.`name`;
 
 -- 5. Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti 
-    SELECT `degrees`.`id`, `degrees`.`name` 
-    AS `degree_name`, `courses`.`name` 
-    AS `course_name`, `teachers`.`id`, `teachers`.`name` 
-    AS `teacher_name`, `teachers`.`surname`  
-    AS `teacher_surname`, `teachers`.`email`  
-    AS `teacher_email` 
+    SELECT `degrees`.`id`, `degrees`.`name` AS `degrees_name`, 
+    `courses`.`name` AS `course_name`, 
+    `teachers`.`id` AS `teacher_id`, 
+    `teachers`.`name` AS `teacher_name`, 
+    `teachers`.`surname` AS `teacher_surname`, 
+    `teachers`.`email`  AS `teacher_email` 
     FROM `degrees`
     JOIN `courses`
     ON `degrees`.`id` = `courses`.`degree_id`
@@ -48,9 +48,23 @@
     ON `courses`.`id` = `course_teacher`.`course_id`
     JOIN `teachers`
     ON `course_teacher`.`teacher_id` = `teachers`.`id`
+    ORDER BY `degrees_name` ASC;
 
 -- 6. Selezionare tutti i docenti che insegnano nel dipartimento di matematica (54)
-
+    SELECT DISTINCT `teachers`.`id`, 
+    `teachers`.`name` AS `teacher_name`, 
+    `departments`.`id`, 
+    `departments`.`name` AS `department` 
+    FROM `teachers`
+    JOIN `course_teacher`
+    ON `teachers`.`id` = `course_teacher`.`teacher_id`
+    JOIN `courses`
+    ON `course_teacher`.`course_id` = `courses`.`id`
+    JOIN `degrees`
+    ON `courses`.`degree_id` = `degrees`.`id`
+    JOIN `departments`
+    ON `degrees`.`department_id` = `departments`.`id`
+    WHERE `departments`.`name` = 'Dipartimento di Matematica'
 
 -- 7. BONUS: Selezionare per ogni studente quanti tentativi d'esame ha sostenuto 
 -- per superare ciascuno dei suoi esami 
